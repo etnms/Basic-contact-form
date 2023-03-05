@@ -2,7 +2,6 @@ import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { useEffect } from 'react';
 import { collection, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -22,18 +21,22 @@ export default function Home() {
   const db = getFirestore(app);
 
   // Testing example from firebase
-  async function addData() {
+  async function sendInfo(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const message: string = (document.querySelector("textarea[name='message']") as HTMLTextAreaElement).value;
+    const contact: string = (document.querySelector("input[name='contact-info']") as HTMLInputElement).value;
+
     try {
-      const docRef = await addDoc(collection(db, "users"), {
-        first: "Ada",
-        last: "Lovelace",
-        born: 1815
+      const docRef = await addDoc(collection(db, "messages"), {
+        message,
+        contact,
       });
       console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
+    }
+    catch (e) {
       console.error("Error adding document: ", e);
     }
-    
   }
 
   return (
@@ -45,7 +48,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <button onClick={() => addData()}>test</button>
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => sendInfo(e)}>
+          <label htmlFor="message">Message</label>
+          <textarea name="message"></textarea>
+          <label htmlFor="contact-info">Contact</label>
+          <input name="contact-info"></input>
+          <button type="submit">Send</button>
+        </form>
       </main>
     </>
   )
