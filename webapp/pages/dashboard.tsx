@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
+import { collection, DocumentData, Firestore, getDocs, QueryDocumentSnapshot, QuerySnapshot } from "firebase/firestore";
+import { FirebaseApp, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useRouter } from 'next/router';
+import { Auth, getAuth, signOut, onAuthStateChanged, User } from "firebase/auth";
+import { NextRouter, useRouter } from 'next/router';
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -22,26 +22,33 @@ interface IDocument {
 
 function Dashboard() {
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore(app);
-    const router = useRouter()
+    const app: FirebaseApp = initializeApp(firebaseConfig);
+    const auth: Auth = getAuth();
+    const db: Firestore = getFirestore(app);
+    const router: NextRouter = useRouter()
 
     const [documents, setDocuments] = useState<IDocument[]>([]);
 
     async function getData() {
-        const querySnapshot = await getDocs(collection(db, "messages"));
+        const querySnapshot: QuerySnapshot<DocumentData>  = await getDocs(collection(db, "messages"));
 
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
             setDocuments(documents => [...documents, { id: doc.id, message: doc.data().message, contact: doc.data().contact }])
         });
     }
 
+    async function signUserOut() {
+        signOut(auth).then(() => {
+            console.log("success sign out");
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, (user: User | null) => {
             if (user) {
                 const uid = user.uid;
-
                 getData();
                 console.log(uid);
             } else {
@@ -54,12 +61,13 @@ function Dashboard() {
     }, [])
 
     function displayData() {
-        return documents.map((doc: any) => <li key={doc.id}>{doc.message} {doc.contact}</li>)
+        return documents.map((doc: IDocument) => <li key={doc.id}>{doc.message} {doc.contact}</li>)
     }
 
     return (
         <div>
             <h1>Dashboard</h1>
+            <button type="button" onClick={() => signUserOut()}>Sign out</button>
             <ul>{displayData()}</ul>
         </div>
     );

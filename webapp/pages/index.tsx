@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { FirebaseApp, initializeApp } from "firebase/app";
+import { Firestore, getFirestore } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 import { useState } from 'react';
 
@@ -17,8 +17,8 @@ const firebaseConfig = {
 export default function Home() {
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const app: FirebaseApp = initializeApp(firebaseConfig);
+  const db: Firestore = getFirestore(app);
 
   const [msgSent, setMsgSent] = useState<boolean>();
   const [msgStateText, setMsgStateText]= useState<string>("");
@@ -69,7 +69,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => sendInfo(e)}>
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => sendInfo(e)} className={styles.form}>
           <label htmlFor="message">Message</label>
           <textarea name="message"></textarea>
           <label htmlFor="contact-info">Contact</label>

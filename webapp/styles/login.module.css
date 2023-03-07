@@ -1,0 +1,38 @@
+.main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: 2px solid black;
+    border-radius: 2rem;
+    height: 40vh;
+    padding: 4rem;
+}
+
+.form>input {
+    width: 20vw;
+    height: 2rem;
+    border-radius: 1rem;
+    outline: none;
+    border: 2px solid black;
+    padding: 0.5rem;
+}
+
+.form>input:focus {
+    transform: scale(1.05);
+    transition: 300ms;
+}
+
+.button {
+    padding: 0.5rem 1rem;
+
+}

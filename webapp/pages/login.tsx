@@ -1,7 +1,8 @@
 import React from 'react';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from 'next/router';
-import { initializeApp } from "firebase/app";
+import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { NextRouter, useRouter } from 'next/router';
+import { FirebaseApp, initializeApp } from "firebase/app";
+import styles from "../styles/login.module.css";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -10,13 +11,13 @@ const firebaseConfig = {
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGEBUCKET,
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGINGSENDERID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APPID,
-  };
+};
 
 function Login() {
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const router = useRouter();
+    const app: FirebaseApp = initializeApp(firebaseConfig);
+    const auth: Auth = getAuth();
+    const router: NextRouter = useRouter();
 
     function signIn(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -29,7 +30,6 @@ function Login() {
                 const user = userCredential.user;
                 console.log(user);
                 router.push("/dashboard")
-                // ...
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -40,14 +40,17 @@ function Login() {
 
 
     return (
-        <div>
-            <p>Login</p>
-            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => signIn(e)}>
+        <main className={styles.main}>
+
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => signIn(e)} className={styles.form}>
+                <h1>Login</h1>
+                <label htmlFor='email'>Email</label>
                 <input name="email"></input>
+                <label htmlFor='password'>Password</label>
                 <input name="password"></input>
-                <button type="submit">Submit</button>
+                <button type="submit" className={styles.button}>Submit</button>
             </form>
-        </div>
+        </main>
     );
 }
 

@@ -1,0 +1,25 @@
+.main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: 2px solid black;
+    border-radius: 2rem;
+    height: 80vh;
+    padding: 4rem;
+}
+
+.form > textarea {
+    min-height: 40vh;
+    min-width: 40vw;
+    padding: 0.5rem;
+}
