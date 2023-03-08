@@ -20,7 +20,6 @@ export default function Home() {
   const app: FirebaseApp = initializeApp(firebaseConfig);
   const db: Firestore = getFirestore(app);
 
-  const [msgSent, setMsgSent] = useState<boolean>();
   const [msgStateText, setMsgStateText]= useState<string>("");
 
   // Send info function
@@ -30,6 +29,12 @@ export default function Home() {
     const message: string = (document.querySelector("textarea[name='message']") as HTMLTextAreaElement).value;
     const contact: string = (document.querySelector("input[name='contact-info']") as HTMLInputElement).value;
 
+    if (message === "" || contact === "")
+    {
+      setMsgStateText("Error: one of the fields is empty");
+      return;
+    }
+    
     try {
       const docRef = await addDoc(collection(db, "messages"), {
         message,
@@ -37,27 +42,25 @@ export default function Home() {
         date: new Date()
       });
       console.log("Document written with ID: ", docRef.id);
-      setMsgSent(true);
+      setMsgStateText("Message sent!");
+      hideMessage();
     }
     catch (e) {
       console.error("Error adding document: ", e);
-      setMsgSent(false);
+      setMsgStateText("Error: your message couldn't be send");
     }
 
-    // Display a message depending on state of validity
-    displayMessageState();
     // Reset fields to empty strings
     (document.querySelector("textarea[name='message']") as HTMLTextAreaElement).value = "";
     (document.querySelector("input[name='contact-info']") as HTMLInputElement).value = "";
   }
 
-  function displayMessageState() {
-    if (msgSent == null)
-      setMsgStateText("");
-    if (msgSent)
-      setMsgStateText("Message sent!");
-    else 
-      setMsgStateText("Error your message couldn't be send")
+  function hideMessage() {
+    setTimeout(deleteMessage, 2000);
+  }
+
+  function deleteMessage() {
+    setMsgStateText("");
   }
 
   return (
@@ -68,16 +71,19 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className={styles.container}>
       <main className={styles.main}>
+        <h1 className={styles.title}>Basic contact form</h1>
         <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => sendInfo(e)} className={styles.form}>
           <label htmlFor="message">Message</label>
           <textarea name="message"></textarea>
-          <label htmlFor="contact-info">Contact</label>
-          <input name="contact-info"></input>
+          <label htmlFor="contact-info">Your contact (email address)</label>
+          <input name="contact-info" type="email"></input>
           <button type="submit">Send</button>
         </form>
-        <span>{msgStateText}</span>
+        {msgStateText !== ""? <span>{msgStateText}</span>: null}
       </main>
+      </div>
     </>
   )
 }

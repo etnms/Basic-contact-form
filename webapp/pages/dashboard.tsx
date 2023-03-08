@@ -4,6 +4,7 @@ import { FirebaseApp, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { Auth, getAuth, signOut, onAuthStateChanged, User } from "firebase/auth";
 import { NextRouter, useRouter } from 'next/router';
+import styles from "../styles/dashboard.module.css";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -17,7 +18,8 @@ const firebaseConfig = {
 interface IDocument {
     id: string,
     message: string,
-    contact: string
+    contact: string,
+    date: string
 }
 
 function Dashboard() {
@@ -30,10 +32,15 @@ function Dashboard() {
     const [documents, setDocuments] = useState<IDocument[]>([]);
 
     async function getData() {
-        const querySnapshot: QuerySnapshot<DocumentData>  = await getDocs(collection(db, "messages"));
+        const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(collection(db, "messages"));
 
         querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-            setDocuments(documents => [...documents, { id: doc.id, message: doc.data().message, contact: doc.data().contact }])
+            setDocuments(documents => [...documents, {
+                id: doc.id,
+                message: doc.data().message,
+                contact: doc.data().contact,
+                date: `${doc.data().date.toDate().toDateString()} at ${doc.data().date.toDate().toLocaleTimeString()}`
+            }])
         });
     }
 
@@ -52,7 +59,6 @@ function Dashboard() {
                 getData();
                 console.log(uid);
             } else {
-
                 console.log("signed out");
                 router.push("/login")
             }
@@ -61,14 +67,22 @@ function Dashboard() {
     }, [])
 
     function displayData() {
-        return documents.map((doc: IDocument) => <li key={doc.id}>{doc.message} {doc.contact}</li>)
+        return documents.map((doc: IDocument) =>
+            <li key={doc.id} className={styles.item}>
+                <p>Contact: {doc.contact} - Sent: {doc.date}</p>
+                <p>Message: {doc.message}</p></li>)
     }
 
     return (
         <div>
-            <h1>Dashboard</h1>
-            <button type="button" onClick={() => signUserOut()}>Sign out</button>
-            <ul>{displayData()}</ul>
+            <nav className={styles.nav}>
+                <h1 className={styles.title}>Dashboard</h1>
+                <button type="button" onClick={() => signUserOut()} className={styles.button}>Sign out</button>
+            </nav>
+            <main className={styles.main}>
+
+                <ul className={styles.list}>{displayData()}</ul>
+            </main>
         </div>
     );
 }

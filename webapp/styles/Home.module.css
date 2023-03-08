@@ -1,9 +1,21 @@
-.main {
+.container {
+    padding: 2rem;
+    background-color: #f3f3f3;
     height: 100vh;
+}
+.main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0px 2px 4px -1px;
+}
+
+.title {
+    font-size: 2rem;
 }
 
 .form {
@@ -12,14 +24,49 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    border: 2px solid black;
-    border-radius: 2rem;
-    height: 80vh;
+    height: 70vh;
     padding: 4rem;
+}
+
+.form > textarea, .form > input {
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    outline: none;
+}
+
+.form> textarea:focus, .form > input:focus {
+    box-shadow: 2px 4px 7px 2px #92A5DD;
+    transition: 300ms;
 }
 
 .form > textarea {
     min-height: 40vh;
     min-width: 40vw;
-    padding: 0.5rem;
+    resize: none;
+}
+
+.form > input {
+    width: 30vw;
+}
+
+.form > label {
+    font-size: 1.2rem;
+}
+
+.form > button {
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: #4D6FD6;
+    color: white;
+    font-size: 1.3rem;
+    border: none;
+    cursor: pointer;
+}
+
+.form > button:hover {
+    background-color: #394157;
+    transition: 300ms;
+    transform: scale(1.05);
 }

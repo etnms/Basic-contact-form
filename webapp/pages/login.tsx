@@ -43,12 +43,12 @@ function Login() {
         <main className={styles.main}>
 
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => signIn(e)} className={styles.form}>
-                <h1>Login</h1>
+                <h1 className={styles.title}>Login</h1>
                 <label htmlFor='email'>Email</label>
                 <input name="email"></input>
                 <label htmlFor='password'>Password</label>
-                <input name="password"></input>
-                <button type="submit" className={styles.button}>Submit</button>
+                <input name="password" type="password"></input>
+                <button type="submit" className={styles.button}>Sign in</button>
             </form>
         </main>
     );
