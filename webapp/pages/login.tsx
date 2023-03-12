@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { NextRouter, useRouter } from 'next/router';
 import { FirebaseApp, initializeApp } from "firebase/app";
@@ -18,6 +18,7 @@ function Login() {
     const app: FirebaseApp = initializeApp(firebaseConfig);
     const auth: Auth = getAuth();
     const router: NextRouter = useRouter();
+    const [errLoginText, setErrLoginText] = useState<string>();
 
     function signIn(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -35,9 +36,9 @@ function Login() {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode + errorMessage);
+                setErrLoginText("Error while trying to login.")
             });
     }
-
 
     return (
         <main className={styles.main}>
@@ -49,6 +50,7 @@ function Login() {
                 <label htmlFor='password'>Password</label>
                 <input name="password" type="password"></input>
                 <button type="submit" className={styles.button}>Sign in</button>
+                {errLoginText === ""? null : <p className={styles.err}>{errLoginText}</p>}
             </form>
         </main>
     );

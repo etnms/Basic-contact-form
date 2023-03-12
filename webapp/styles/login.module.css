@@ -19,7 +19,7 @@
     justify-content: center;
     gap: 1rem;
     border-radius: 2rem;
-    height: 60vh;
+    height: 65vh;
     width: 40vw;
     padding: 4rem;
     background-color: white;
@@ -63,4 +63,8 @@
     background-color: #92A5DD;
     color: black;
     transition: 300ms;
+}
+.err {
+    color: red;
+    margin: 0.5rem;
 }

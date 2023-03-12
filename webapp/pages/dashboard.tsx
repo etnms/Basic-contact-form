@@ -55,15 +55,12 @@ function Dashboard() {
     useEffect(() => {
         onAuthStateChanged(auth, (user: User | null) => {
             if (user) {
-                const uid = user.uid;
+                // const uid = user.uid;
                 getData();
-                console.log(uid);
             } else {
-                console.log("signed out");
                 router.push("/login")
             }
         });
-
     }, [])
 
     function displayData() {
@@ -80,7 +77,6 @@ function Dashboard() {
                 <button type="button" onClick={() => signUserOut()} className={styles.button}>Sign out</button>
             </nav>
             <main className={styles.main}>
-
                 <ul className={styles.list}>{displayData()}</ul>
             </main>
         </div>
