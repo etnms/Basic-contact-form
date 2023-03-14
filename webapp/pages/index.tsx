@@ -4,6 +4,8 @@ import { FirebaseApp, initializeApp } from "firebase/app";
 import { Firestore, getFirestore } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 import { useState } from 'react';
+import { getMessaging, Messaging } from "firebase/messaging";
+
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -19,6 +21,7 @@ export default function Home() {
   // Initialize Firebase
   const app: FirebaseApp = initializeApp(firebaseConfig);
   const db: Firestore = getFirestore(app);
+  const messaging: Messaging = getMessaging(app);
 
   const [msgStateText, setMsgStateText]= useState<string>("");
 
@@ -53,6 +56,28 @@ export default function Home() {
     // Reset fields to empty strings
     (document.querySelector("textarea[name='message']") as HTMLTextAreaElement).value = "";
     (document.querySelector("input[name='contact-info']") as HTMLInputElement).value = "";
+  }
+
+  function sendNotifcation() {
+    const message = {
+      data: {
+        score: '850',
+        time: '2:45'
+      },
+      token: process.env.CLIENT_TOKEN
+    };
+    
+
+    // Send a message to the device corresponding to the provided
+    // registration token.
+    getMessaging().send(message) // need server side
+      .then((response: any) => {
+        // Response is a message ID string.
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error: any) => {
+        console.log('Error sending message:', error);
+      });
   }
 
   function hideMessage() {
