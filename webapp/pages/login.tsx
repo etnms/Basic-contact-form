@@ -25,6 +25,7 @@ function Login() {
         const email = (document.querySelector("input[name='email']") as HTMLTextAreaElement).value;
         const password = (document.querySelector("input[name='password']") as HTMLTextAreaElement).value;
 
+        
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 
@@ -38,6 +39,7 @@ function Login() {
                 console.log(errorCode + errorMessage);
                 setErrLoginText("Error while trying to login.")
             });
+            
     }
 
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, DocumentData, Firestore, getDocs, QueryDocumentSnapshot, QuerySnapshot } from "firebase/firestore";
+import { collection, DocumentData, Firestore, getDocs, orderBy, query, QueryDocumentSnapshot, QuerySnapshot } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { Auth, getAuth, signOut, onAuthStateChanged, User } from "firebase/auth";
@@ -25,15 +25,16 @@ interface IDocument {
 function Dashboard() {
 
     const app: FirebaseApp = initializeApp(firebaseConfig);
-    const auth: Auth = getAuth();
+   const auth: Auth = getAuth();
     const db: Firestore = getFirestore(app);
     const router: NextRouter = useRouter()
 
     const [documents, setDocuments] = useState<IDocument[]>([]);
 
+    
     async function getData() {
-        const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(collection(db, "messages"));
-
+        // Organize data by most recent order
+        const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(query(collection(db, "messages"), orderBy("date", "desc")));
         querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
             setDocuments(documents => [...documents, {
                 id: doc.id,

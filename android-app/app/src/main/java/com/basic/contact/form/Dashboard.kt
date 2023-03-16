@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.marginTop
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -49,7 +50,7 @@ class Dashboard : AppCompatActivity() {
 
     private fun readData() {
         val linearLayout = findViewById<LinearLayout>(R.id.items)
-        db.collection("messages")
+        db.collection("messages").orderBy("date", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
@@ -98,22 +99,5 @@ class Dashboard : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.w("err", "Error getting documents.", exception)
             }
-    }
-
-    public fun checkMessages() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w("error tag", "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            // Log
-            //val msg = getString(R.string.msg_token_fmt, token)
-            Log.d("success tag", token)
-            //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-        })
     }
 }

@@ -2,6 +2,8 @@
 
 .env
 
+#firebase admin
+/pages/api/serviceAccount.json
 # dependencies
 /node_modules
 /.pnp
